@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.168
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AntiCheat-Testing-Framework", "AntiCheat-Testing-Framework\AntiCheat-Testing-Framework.vcxproj", "{159CCB45-07C0-402D-9616-99024CB5DE50}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{159CCB45-07C0-402D-9616-99024CB5DE50}.Debug|x64.ActiveCfg = Debug|x64
+		{159CCB45-07C0-402D-9616-99024CB5DE50}.Debug|x64.Build.0 = Debug|x64
+		{159CCB45-07C0-402D-9616-99024CB5DE50}.Debug|x86.ActiveCfg = Debug|Win32
+		{159CCB45-07C0-402D-9616-99024CB5DE50}.Debug|x86.Build.0 = Debug|Win32
+		{159CCB45-07C0-402D-9616-99024CB5DE50}.Release|x64.ActiveCfg = Release|x64
+		{159CCB45-07C0-402D-9616-99024CB5DE50}.Release|x64.Build.0 = Release|x64
+		{159CCB45-07C0-402D-9616-99024CB5DE50}.Release|x86.ActiveCfg = Release|Win32
+		{159CCB45-07C0-402D-9616-99024CB5DE50}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4B354B9C-B814-457A-8FF5-722BFE9C944E}
+	EndGlobalSection
+EndGlobal
