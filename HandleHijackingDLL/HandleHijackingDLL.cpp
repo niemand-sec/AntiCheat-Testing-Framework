@@ -10,6 +10,10 @@
 #include <string>
 #include <iostream>
 
+// EDIT if you modified the original name
+char tmp[] = "\\\\.\\pipe\\driverbypass";
+
+
 HANDLE hNamedPipe;
 PipeMessageRequest PMRequest;
 PipeMessageResponse PMResponse;
@@ -20,17 +24,20 @@ int ConnectPipe(LPTSTR name)
 	hNamedPipe = CreateFile(name, GENERIC_READ | GENERIC_WRITE,
 		0, NULL, OPEN_EXISTING, 0, NULL);
 
-	if (hNamedPipe != INVALID_HANDLE_VALUE)
+	while (1)
 	{
-		std::cout << "[+] Connected." << std::endl;
-		return 1;
+		if (hNamedPipe != INVALID_HANDLE_VALUE)
+		{
+			std::cout << "[+] Connected." << std::endl;
+			break;
+		}
+		else
+		{
+			std::cout << "[-] Couldn't connect: " << std::dec << GetLastError() << std::endl;
+			continue;
+		}
 	}
-	else
-	{
-		std::cout << "[-] Couldn't connect: " << std::dec << GetLastError() << std::endl;
-		return 0;
-	}
-
+	return 0;
 }
 
 int WritePipe(struct PipeMessageResponse response)
@@ -86,21 +93,6 @@ int ReadPipe() {
 	}
 }
 
-/*
-struct PipeMessageRequest {
-	int action = 0;
-	int handle = 0;
-	int address = 0;
-	int size = BUFSIZE;
-	char buffer[BUFSIZE] = { "" }
-};
-
-struct PipeMessageResponse {
-	int status = 0;
-	SIZE_T bytesRead= 0;
-	char buffer[BUFSIZE] = { "" };
-};
-*/
 
 int handleAction()
 {
@@ -108,6 +100,7 @@ int handleAction()
 	case 0: //Ping
 	{
 		std::cout << '0' << std::endl;
+		break;
 	}
 	case 1: //RPM
 	{
@@ -144,6 +137,7 @@ int handleAction()
 	case 3: //CreatRemoteThread
 	{
 		std::cout << '3' << std::endl;
+		break;
 	}
 	case 4: //NtReadVirtualMemory
 	{
@@ -179,7 +173,7 @@ int handleAction()
 	default:
 	{
 		std::cout << "Default" << std::endl;
-
+		break;
 	}
 	}
 }
@@ -188,14 +182,15 @@ int handleAction()
 
 
 int main() {
-	LPTSTR sPipeName = (LPTSTR)"\\\\.\\pipe\\driverbypass";
 
 	// UNCOMMENT IF: We need to delay the connection to the Master.
 	//Sleep(300000);
 
+	strncpy_s(CheatHelper::namedPipeName, tmp, _countof(tmp));
+
 	CheatHelper::ConsoleSetup("Client");
 
-	ConnectPipe(sPipeName);
+	ConnectPipe(CheatHelper::namedPipeName);
 
 
 	PMResponse.status = 1;
@@ -204,20 +199,23 @@ int main() {
 
 	while (1)
 	{
-		if (!ReadPipe())
-		{
-			return 0;
-		}
+		ReadPipe();
+
 
 		//int handle = 0xBF8;
 		//LPVOID buffer;
 		//TODO: Add loop and reconnection
 		int success = handleAction();
 
-		if (!success)
+		
+		WritePipe(PMResponse);
+
+		// if it is the last possible action -> break
+		if (PMRequest.action == 5)
 		{
-			WritePipe(PMResponse);
+			break;
 		}
+		
 	}
 
 	

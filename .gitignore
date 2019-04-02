@@ -259,3 +259,10 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+
+# IDA Files
+.id0
+.id1
+.nam
+.til
+.i64

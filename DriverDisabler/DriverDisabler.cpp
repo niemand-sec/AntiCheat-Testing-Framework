@@ -49,11 +49,11 @@ bool DriverBypass(int pID)
 int main()
 {
 	std::cout << "Hello World!\n";
-	const char* procName = "BlackDesert64.exe";
+	//char procName[] = "BlackDesert64.exe";
 	DWORD processID = NULL;
 	while (true)
 	{
-		processID = CheatHelper::GetProcId(procName);
+		processID = CheatHelper::GetProcId(CheatHelper::targetProc);
 		if (processID != NULL)
 		{
 			std::cout << std::hex << processID << std::endl;

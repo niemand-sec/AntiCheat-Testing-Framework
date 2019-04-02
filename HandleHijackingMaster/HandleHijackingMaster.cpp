@@ -38,15 +38,15 @@ TNtOpenProcess NtOpenProcess = NULL;
 
 int StartPipe(LPTSTR name)
 {
-	std::string namedPipeName = "\\\\.\\pipe\\driverbypass";
-	LPCSTR namedPipe = namedPipeName.c_str();
-	hPipeServer = CreateNamedPipe(name, PIPE_ACCESS_DUPLEX | PIPE_TYPE_BYTE | PIPE_READMODE_BYTE,
+	//std::string namedPipeName = "\\\\.\\pipe\\driverbypass";
+	//LPCSTR namedPipe = namedPipeName.c_str();
+	hPipeServer = CreateNamedPipe(CheatHelper::namedPipeName, PIPE_ACCESS_DUPLEX | PIPE_TYPE_BYTE | PIPE_READMODE_BYTE,
 		PIPE_WAIT,
 		PIPE_UNLIMITED_INSTANCES, BUFSIZE, BUFSIZE, 0, NULL);
 
 	if (hPipeServer != NULL)
 	{
-		std::cout << "[+] NamedPipe created." << std::endl;
+		std::cout << "[+] NamedPipe created: " << CheatHelper::namedPipeName << std::endl;
 	}
 	else
 	{
@@ -69,9 +69,6 @@ PipeMessageRequest PMRequest;
 PipeMessageResponse PMResponse;
 
 int ReadPipe() {
-	//HANDLE hHeap = GetProcessHeap();
-	//void* message = HeapAlloc(hHeap, 0, BUFSIZE);
-	//message = HeapAlloc(hHeap, 0, BUFSIZE);
 	DWORD dwRead;
 	BOOL bRead;
 	std::cout << "[+] Waiting for message. " << std::endl;
@@ -93,20 +90,20 @@ int ReadPipe() {
 	}
 }
 
-int WritePipe(struct PipeMessageRequest request)
+int WritePipe()
 {
 
 	BOOL bWrite;
 	DWORD dwWritten;
 	//const char *buffer = "Ready";
 	std::cout << "[+] Sending Msg: " << std::endl;
-	std::cout << "\t[+] action: "  << request.action << std::endl;
-	std::cout << "\t[+] handle: 0x" << request.handle << std::endl;
-	std::cout << "\t[+] address: 0x" << std::hex << request.address << std::endl;
-	std::cout << "\t[+] size: " << request.size << std::endl;
+	std::cout << "\t[+] action: "  << PMRequest.action << std::endl;
+	std::cout << "\t[+] handle: 0x" << PMRequest.handle << std::endl;
+	std::cout << "\t[+] address: 0x" << std::hex << PMRequest.address << std::endl;
+	std::cout << "\t[+] size: " << PMRequest.size << std::endl;
 	std::cout << "\t[+] buffer: ";
-	CheatHelper::PrintBytes((PVOID)request.buffer);
-	bWrite = WriteFile(hPipeServer, &request, sizeof(PipeMessageRequest), &dwWritten, NULL);
+	CheatHelper::PrintBytes((PVOID)PMRequest.buffer);
+	bWrite = WriteFile(hPipeServer, &PMRequest, sizeof(PipeMessageRequest), &dwWritten, NULL);
 	if (!bWrite)
 	{
 		std::cout << "[-] Failed writing: " << std::dec << GetLastError() << std::endl;
@@ -120,16 +117,30 @@ int WritePipe(struct PipeMessageRequest request)
 
 }
 
+
 void handleTests(HANDLE handle) 
 {
 	SIZE_T stRead = 0;
 	SIZE_T stWrite = 0;
 
+	PMRequest.action = 1;
+	CheatHelper::prepareRequest(PMRequest);
+
 	CheatHelper::RPM((HANDLE)handle, (LPCVOID)PMRequest.address, PMResponse.buffer, PMRequest.size, NULL);
+
+	PMRequest.action = 2;
+	CheatHelper::prepareRequest(PMRequest);
 
 	CheatHelper::WPM((HANDLE)handle, (LPVOID)PMRequest.address, PMRequest.buffer, PMRequest.size, NULL);
 
+	PMRequest.action = 4;
+	CheatHelper::prepareRequest(PMRequest);
+
 	CheatHelper::NtRVM((HANDLE)handle, (LPVOID)PMRequest.address, PMResponse.buffer, PMRequest.size, NULL);
+
+	
+	PMRequest.action = 5;
+	CheatHelper::prepareRequest(PMRequest);
 
 	CheatHelper::NtWVM((HANDLE)handle, (LPVOID)PMRequest.address, PMRequest.buffer, PMRequest.size, NULL);
 
@@ -138,25 +149,23 @@ void handleTests(HANDLE handle)
 
 int main()
 {
-	//LPTSTR sPipeName = TEXT("\\\\.\\pipe\\driverbypass");
+	CheatHelper::loadConfig();
 
-	PMRequest.action = 1;
-	PMRequest.handle = 0x1870;
-	PMRequest.address = 0x0000000144BC6000;
-	strncpy_s(PMRequest.buffer, "hell2", BUFSIZE);
-	PMRequest.size = sizeof(PMRequest.buffer);
-	std::cout << std::hex << PMRequest.buffer << std::endl;
+	// Setting up first action RPM
+	//PMRequest.action = 1;
+	PMRequest.handle = CheatHelper::requestHandleNP;
+	PMRequest.address = 0x0;
+	SecureZeroMemory(PMRequest.buffer, BUFSIZE);
+	PMRequest.size = 0x0;
 
-
-	const char* procName = "BlackDesert64.exe";
 	DWORD processID = NULL;
 	while (true)
 	{
-		processID = CheatHelper::GetProcId(procName);
+		processID = CheatHelper::GetProcId(CheatHelper::targetProc);
 		if (processID != NULL)
 		{
 			std::cout << "[+] PID: 0x" << std::hex << processID << std::endl;
-			break;
+			break;//
 		}
 	}
 
@@ -167,13 +176,11 @@ int main()
 	else
 	{
 		std::cout << "[+] OpenProcess: 0x" << std::hex << hProcessOP << std::endl;
-		handleTests(hProcessOP);
+		//handleTests(hProcessOP);
 	}
 
 
-	LPTSTR sPipeName = (LPTSTR)"\\\\.\\pipe\\driverbypass";
-
-	if (!StartPipe(sPipeName))
+	if (!StartPipe(CheatHelper::namedPipeName))
 	{
 		return 0;
 	}
@@ -189,15 +196,18 @@ int main()
 	else
 		std::cout << "[+] Cheat ready." << std::endl;
 
-	strncpy_s(PMRequest.buffer, "TTTT", BUFSIZE);
-	PMRequest.size = sizeof(PMRequest.buffer);
+	// Clean PMRequest.address
+	PMRequest.address = 0x0;
 
 	int i = 1;
 	while (1)
 	{
 		PMRequest.action = i;
 
-		if (!WritePipe(PMRequest))
+		// We need to set the config values somehow, this is quickest way I found
+		CheatHelper::prepareRequest(PMRequest);
+
+		if (!WritePipe())
 		{
 			std::cout << "[-] Failed writing Pipe." << std::endl;
 		}
@@ -213,7 +223,6 @@ int main()
 	}
 
 	
-
     std::cout << "End!\n"; 
 }
 

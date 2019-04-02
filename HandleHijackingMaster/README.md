@@ -17,6 +17,7 @@ This module requries configuration:
 - Sequence of actions to perform (TODO: now it tries everything from 0 to 5, implement a list)
 - HANDLE to use as pivot (TODO: It is hardocded now so it need to be recompiled, it would be better to enumerate handles and identify the correct one).
 - Buffer with the CONTENT we will write.
+- CHANGE VALUE OF namedPipeName
  
 ## Combination with other techniques
 
