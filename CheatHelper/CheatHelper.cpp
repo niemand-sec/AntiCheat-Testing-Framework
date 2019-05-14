@@ -290,7 +290,7 @@ char CheatHelper::fileMapName[];
 bool CheatHelper::loadConfig()
 {
 	//LPCTSTR configFile = _T(".\\..\\..\\config.ini");
-	LPCTSTR configFile = _T("E:\\Recon2019\\AntiCheat-Testing-Framework\\config.ini");
+	LPCTSTR configFile = _T("F:\\Recon2019\\AntiCheat-Testing-Framework\\config.ini");
 
 	//States
 	CheatHelper::bDelayExecution = (bool)GetPrivateProfileInt("Addresses", "bDelayExecution", 0, configFile);
@@ -368,7 +368,7 @@ bool CheatHelper::loadConfig()
 //	std::cout << "[.] sPipeName " << CheatHelper::sPipeName << std::endl;
 
 	//Strings
-	GetPrivateProfileString("Strings", "targetProc", "calc.exe", CheatHelper::targetProc, BUFSIZE, configFile);
+	GetPrivateProfileString("Strings", "targetProc", "calc2.exe", CheatHelper::targetProc, BUFSIZE, configFile);
 	GetPrivateProfileString("Strings", "namedPipeName", "calc.exe", CheatHelper::namedPipeName, BUFSIZE, configFile);
 	GetPrivateProfileString("Strings", "fileMapName", "calc.exe", CheatHelper::fileMapName, BUFSIZE, configFile);
 

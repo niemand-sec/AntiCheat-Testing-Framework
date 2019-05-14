@@ -78,7 +78,7 @@ bool Init()
 
 int main()
 {
-	std::cout << "Hello World!\n";
+	std::cout << "[+] Init\n";
 
 
 	if (!Init())

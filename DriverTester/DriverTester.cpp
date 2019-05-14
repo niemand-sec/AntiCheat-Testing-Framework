@@ -46,7 +46,7 @@ bool ExploitRazerDriver() {
 	HANDLE hDevice = CreateFile("\\\\.\\47CD78C9-64C3-47C2-B80F-677B887CF095", FILE_SHARE_WRITE | FILE_SHARE_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (hDevice == INVALID_HANDLE_VALUE)
 	{
-		std::cout << "INVALID_HANDLE_VALUE! " << GetLastError() << std::endl;
+		std::cout << "INVALID_HANDLE_VALUE: " << GetLastError() << std::endl;
 		return 1;
 	}
 
@@ -122,7 +122,7 @@ int main()
 		targetPid = CheatHelper::GetProcId(CheatHelper::targetProc);
 		if (targetPid != NULL)
 		{
-			std::cout << "[+] PID: 0x" << std::hex << targetPid << std::endl;
+			std::cout << "[+] PID: 0x" << std::dec << targetPid << std::endl;
 			break;//
 		}
 	}
