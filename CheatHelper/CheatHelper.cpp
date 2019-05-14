@@ -43,6 +43,8 @@ void CheatHelper::Resume(DWORD processId)
 }
 
 //typedef BOOL StartServiceA(SC_HANDLE hService, DWORD dwNumServiceArgs, LPCSTR *lpServiceArgVectors);
+extern "C" NTSTATUS ZwWVM(HANDLE hProc, PVOID pBaseAddress, PVOID pBuffer, SIZE_T NumberOfBytesToWrite);
+extern "C" NTSTATUS ZwRVM(HANDLE hProc, PVOID pBaseAddress, PVOID pBuffer, SIZE_T NumberOfBytesToRead);
 
 
 // Process Functions
@@ -157,6 +159,40 @@ int CheatHelper::NtWVM(HANDLE ProcessHandle, PVOID BaseAddress, PVOID Buffer, UL
 	CheatHelper::PrintBytes((PVOID)Buffer);
 	return 0;
 }
+
+
+int CheatHelper::ZwRVM(HANDLE ProcessHandle, PVOID BaseAddress, PVOID Buffer, ULONG NumberOfBytesToRead)
+{
+	auto status = ZwRVM(ProcessHandle, BaseAddress, Buffer, NumberOfBytesToRead);
+	if (status != 0)
+	{
+		std::cout << "[-] ZwReadVirtualMemory failed: " << std::dec << GetLastError() << std::endl;
+		return 1;
+	}
+	//std::cout << "[+] NtReadVirtualMemory: " << &Buffer << std::endl;
+	std::cout << "[+] ZwReadVirtualMemory: ";
+	CheatHelper::PrintBytes((PVOID)Buffer);
+	return 0;
+
+}
+
+int CheatHelper::ZwWVM(HANDLE ProcessHandle, PVOID BaseAddress, PVOID Buffer, ULONG NumberOfBytesToWrite)
+{
+	SIZE_T stWrite = 0;
+
+	int status = ZwWVM(ProcessHandle, BaseAddress, Buffer, NumberOfBytesToWrite);
+	if (status != 0)
+	{
+		std::cout << "[-] ZwWriteVirtualMemory Failed: " << std::dec << GetLastError() << std::endl;
+		return 1;
+	}
+	//std::cout << "[+] NtWriteVirtualMemory: " << &Buffer << std::endl;
+	std::cout << "[+] ZwWriteVirtualMemory: ";
+	CheatHelper::PrintBytes((PVOID)Buffer);
+	return 0;
+}
+
+
 
 // NamedPipe functions
 
