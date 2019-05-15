@@ -106,6 +106,15 @@ void handleTests(HANDLE handle)
 
 	CheatHelper::NtWVM((HANDLE)handle, (LPVOID)PMRequest.address, PMRequest.buffer, PMRequest.size, NULL);
 
+	PMRequest.action = 6;
+	CheatHelper::prepareRequest(PMRequest);
+	CheatHelper::ZwRVM((HANDLE)handle, (LPVOID)PMRequest.address, PMRequest.buffer, PMRequest.size, NULL);
+
+	PMRequest.action = 7;
+	CheatHelper::prepareRequest(PMRequest);
+	CheatHelper::ZwWVM((HANDLE)handle, (LPVOID)PMRequest.address, PMRequest.buffer, PMRequest.size, NULL);
+
+
 }
 
 
@@ -113,7 +122,7 @@ void handleTests(HANDLE handle)
 int main()
 {
 	
-	std::cout << "Hello World!\n";
+	std::cout << "[+] Init\n";
 	CheatHelper::loadConfig();
 
 	
@@ -125,6 +134,7 @@ int main()
 			std::cout << "[+] PID: 0x" << std::dec << targetPid << std::endl;
 			break;//
 		}
+		Sleep(1000);
 	}
 
 	PMRequest.address = 0x0;

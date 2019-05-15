@@ -1,17 +1,17 @@
 .code
 
-ZwWVM proc
+ZwWriteVM proc
 	mov r10, rcx
 	mov eax, 3Ah
 	syscall
 	ret
-ZwWVM endp
+ZwWriteVM endp
 
-ZwRVM proc
+ZwReadVM proc
 	mov r10, rcx
 	mov eax, 3Fh
 	syscall
 	ret
-ZwRVM endp
+ZwReadVM endp
 
 end

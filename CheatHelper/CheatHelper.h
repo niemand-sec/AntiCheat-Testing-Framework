@@ -39,8 +39,8 @@ public:
 	static int WPM(HANDLE  hProcess, LPVOID  lpBaseAddress, LPCVOID lpBuffer, SIZE_T  nSize, SIZE_T  *lpNumberOfBytesWritten);
 	static int NtRVM(HANDLE ProcessHandle, PVOID BaseAddress, PVOID Buffer, ULONG NumberOfBytesToRead, PULONG NumberOfBytesReaded);
 	static int NtWVM(HANDLE ProcessHandle, PVOID BaseAddress, PVOID Buffer, ULONG NumberOfBytesToWrite, PULONG  NumberOfBytesWritten);
-	static int ZwRVM(HANDLE ProcessHandle, PVOID BaseAddress, PVOID Buffer, ULONG NumberOfBytesToRead);
-	static int ZwWVM(HANDLE ProcessHandle, PVOID BaseAddress, PVOID Buffer, ULONG NumberOfBytesToWrite);
+	static int ZwRVM(HANDLE hProc, PVOID pBaseAddress, PVOID pBuffer, ULONG NumberOfBytesToRead, PULONG NumberOfBytesReaded);
+	static int ZwWVM(HANDLE hProc, PVOID pBaseAddress, PVOID pBuffer, ULONG NumberOfBytesToWrite, PULONG NumberOfBytesWritten);
 	//DX functions
 	//DX11 functions
 
@@ -69,6 +69,12 @@ public:
 	static intptr_t ntWVMAddress;
 	static intptr_t ntWVMAddressHigh;
 	static intptr_t ntWVMAddressLow;
+	static intptr_t ZwRVMAddressHigh;
+	static intptr_t ZwRVMAddressLow;
+	static intptr_t ZwRVMAddress;
+	static intptr_t ZwWVMAddressHigh;
+	static intptr_t ZwWVMAddressLow;
+	static intptr_t ZwWVMAddress;
 
 	//Handles
 	static HANDLE requestHandleNP;
@@ -81,10 +87,14 @@ public:
 	static char WPMBuffer[BUFSIZE];
 	static char ntRVMBuffer[BUFSIZE];
 	static char ntWVMBuffer[BUFSIZE];
+	static char ZwRVMBuffer[BUFSIZE];
+	static char ZwWVMBuffer[BUFSIZE];
 	static SIZE_T RPMBufferSize;
 	static SIZE_T WPMBufferSize;
 	static SIZE_T ntRVMBufferSize;
 	static SIZE_T ntWVMBufferSize;
+	static SIZE_T ZwRVMBufferSize;
+	static SIZE_T ZwWVMBufferSize;
 
 	//Shared Memory
 	//static LPCSTR sPipeName;
