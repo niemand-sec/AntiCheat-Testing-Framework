@@ -144,6 +144,14 @@ void handleTests(HANDLE handle)
 
 	CheatHelper::NtWVM((HANDLE)handle, (LPVOID)PMRequest.address, PMRequest.buffer, PMRequest.size, NULL);
 
+	PMRequest.action = 6;
+	CheatHelper::prepareRequest(PMRequest);
+	CheatHelper::ZwRVM((HANDLE)handle, (LPVOID)PMRequest.address, PMRequest.buffer, PMRequest.size, NULL);
+
+	PMRequest.action = 7;
+	CheatHelper::prepareRequest(PMRequest);
+	CheatHelper::ZwWVM((HANDLE)handle, (LPVOID)PMRequest.address, PMRequest.buffer, PMRequest.size, NULL);
+
 }
 
 
@@ -217,7 +225,7 @@ int main()
 			std::cout << "[-] Failed reading Pipe." << std::endl;
 		}
 
-		if (i == 5)
+		if (i == 7)
 			break;
 		i++;
 	}
