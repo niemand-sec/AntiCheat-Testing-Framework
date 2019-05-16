@@ -123,6 +123,37 @@ int handleAction()
 		PMResponse.status = 1;
 		return 1;
 	}
+	case 6: //ZwReadVirtualMemory
+	{
+		std::cout << '6' << std::endl;
+
+		auto status = CheatHelper::ZwRVM((HANDLE)PMRequest.handle, (LPVOID)PMRequest.address, PMResponse.buffer, PMRequest.size, (PULONG)&PMResponse.bytesRead);
+
+		if (status == 0)
+		{
+			PMResponse.status = 0;
+			return 0;
+		}
+
+		PMResponse.status = 1;
+		return 1;
+
+	}
+	case 7: //ZwWriteVirtualMemory
+	{
+		std::cout << '7' << std::endl;
+		SIZE_T stWrite = 0;
+
+		int status = CheatHelper::ZwWVM((HANDLE)PMRequest.handle, (LPVOID)PMRequest.address, PMRequest.buffer, PMRequest.size, (PULONG)&stWrite);
+		if (status == 0)
+		{
+			PMResponse.status = 0;
+			return 0;
+		}
+
+		PMResponse.status = 1;
+		return 1;
+	}
 	default:
 	{
 		std::cout << "Default" << std::endl;
@@ -183,7 +214,7 @@ int main() {
 
 		CheatHelper::setSpinLockByte(pFileMapMem, !LOCK);
 
-		if (PMRequest.action == 5)
+		if (PMRequest.action == 7)
 		{
 			break;
 		}

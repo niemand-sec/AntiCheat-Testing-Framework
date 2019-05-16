@@ -55,15 +55,15 @@ bool Init()
 	hFileMap = CreateFileMappingA(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE | SEC_COMMIT | SEC_NOCACHE, 0, fileMapSize, CheatHelper::fileMapName);
 	if (!hFileMap)
 	{
-		std::cout << "[-] CreateFileMappingA failed." << std::endl;
-		return false;
+		std::cout << "[-] CreateFileMappingA failed: " << std::dec << GetLastError() << std::endl;
+		return 1;
 	}
 	std::cout << "[+] CreateFileMappingA." << std::endl;
 	pFileMapMem = MapViewOfFile(hFileMap, FILE_MAP_ALL_ACCESS, 0, 0, fileMapSize);
 	if (!pFileMapMem)
 	{
-		std::cout << "[-] MapViewOfFile failed." << std::endl;
-		return false;
+		std::cout << "[-] MapViewOfFile failed: " << std::dec << GetLastError() << std::endl;
+		return 1;
 	}
 	std::cout << "[+] MapViewOfFile." << std::endl;
 
@@ -119,7 +119,7 @@ int main()
 				std::cout << "[-] Failed reading." << std::endl;
 			}
 
-			if (i == 5)
+			if (i == 7)
 				break;
 			i++;
 		}

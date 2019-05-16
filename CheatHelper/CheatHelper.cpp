@@ -246,6 +246,7 @@ void CheatHelper::prepareRequest(PipeMessageRequest &PMRequest)
 	}
 	case 1: //RPM
 	{
+		std::cout << "[+] RPM" << std::endl;
 		PMRequest.address = CheatHelper::RPMAddress;
 		SecureZeroMemory(PMRequest.buffer, BUFSIZE);
 		PMRequest.size = CheatHelper::RPMBufferSize;
@@ -253,6 +254,7 @@ void CheatHelper::prepareRequest(PipeMessageRequest &PMRequest)
 	}
 	case 2: //WPM
 	{
+		std::cout << "[+] WPM" << std::endl;
 		PMRequest.address = CheatHelper::WPMAddress;
 		strncpy_s(PMRequest.buffer, CheatHelper::WPMBuffer, BUFSIZE);
 		PMRequest.size = CheatHelper::WPMBufferSize;
@@ -265,6 +267,7 @@ void CheatHelper::prepareRequest(PipeMessageRequest &PMRequest)
 	}
 	case 4: //NtReadVirtualMemory
 	{
+		std::cout << "[+] NtReadVirtualMemory" << std::endl;
 		PMRequest.address = CheatHelper::ntRVMAddress;
 		SecureZeroMemory(PMRequest.buffer, BUFSIZE);
 		PMRequest.size = CheatHelper::ntRVMBufferSize;
@@ -272,6 +275,7 @@ void CheatHelper::prepareRequest(PipeMessageRequest &PMRequest)
 	}
 	case 5: //NtWriteVirtualMemory
 	{
+		std::cout << "[+] NtWriteVirtualMemory" << std::endl;
 		PMRequest.address = CheatHelper::ntWVMAddress;
 		strncpy_s(PMRequest.buffer, CheatHelper::ntWVMBuffer, BUFSIZE);
 		PMRequest.size = CheatHelper::ntWVMBufferSize;
@@ -279,6 +283,7 @@ void CheatHelper::prepareRequest(PipeMessageRequest &PMRequest)
 	}
 	case 6: //ZwReadVirtualMemory
 	{
+		std::cout << "[+] ZwReadVirtualMemory" << std::endl;
 		PMRequest.address = CheatHelper::ZwRVMAddress;
 		SecureZeroMemory(PMRequest.buffer, BUFSIZE);
 		PMRequest.size = CheatHelper::ZwRVMBufferSize;
@@ -286,6 +291,7 @@ void CheatHelper::prepareRequest(PipeMessageRequest &PMRequest)
 	}
 	case 7: //ZwWriteVirtualMemory
 	{
+		std::cout << "[+] ZwWriteVirtualMemory" << std::endl;
 		PMRequest.address = CheatHelper::ZwWVMAddress;
 		strncpy_s(PMRequest.buffer, CheatHelper::ZwWVMBuffer, BUFSIZE);
 		PMRequest.size = CheatHelper::ZwWVMBufferSize;
