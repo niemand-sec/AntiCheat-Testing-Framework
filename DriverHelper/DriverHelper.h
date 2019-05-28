@@ -11,7 +11,7 @@ typedef BOOL (*_fn_memcpy)(ULONG64 dest, ULONG64 src, DWORD size);
 typedef ULONG64(*_fn_mapPhysical)(DWORDLONG physicaladdress, DWORD size);
 typedef ULONG64(*_fn_unmapPhysical)(ULONG64 address);
 
-
+// Remove padding inside structs
 #pragma pack(push, 1) 
 typedef struct {
 	CHAR  ImageFileName[15];
@@ -22,7 +22,7 @@ class DriverHelper
 {
 public:
 	static int memmem(PBYTE haystack, DWORD haystack_size, PBYTE needle, DWORD needle_size);
-	static int getDeviceHandle();
+	static int getDeviceHandle(LPTSTR name);
 	static unsigned __int64 __fastcall ExpLookupHandleTableEntryW7(__int64 HandleTable, unsigned __int64 handle);
 	static unsigned __int64 __fastcall ExpLookupHandleTableEntryW10(__int64 HandleTable, __int64 handle);
 	static ULONG64 findPhisical_ObjectTable(DWORDLONG startAddress, DWORDLONG stopAddress, DWORD searchSpace, PBYTE  searchBuffer, DWORD bufferSize);

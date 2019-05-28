@@ -76,9 +76,14 @@ public:
 	static intptr_t ZwWVMAddressLow;
 	static intptr_t ZwWVMAddress;
 
+	static DWORDLONG startAddressPhyHigh; //Phy address
+	static DWORDLONG startAddressPhyLow; //Phy address
+	static DWORDLONG startAddressPhy; //Phy address
+
 	//Handles
 	static HANDLE requestHandleNP;
 	static HANDLE requestHandleFM;
+	static HANDLE requestHandleDrv;
 
 
 
@@ -101,8 +106,10 @@ public:
 
 	//Strings
 	static char targetProc[BUFSIZE];
+	static char privotProc[BUFSIZE];
 	static char namedPipeName[BUFSIZE];
 	static char fileMapName[BUFSIZE];
+	static char driverName[BUFSIZE];
 
 
 };

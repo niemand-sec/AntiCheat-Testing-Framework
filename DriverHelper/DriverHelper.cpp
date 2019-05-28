@@ -17,6 +17,7 @@ _fn_mapPhysical DriverHelper::fn_mapPhysical = 0;
 _fn_unmapPhysical DriverHelper::fn_unmapPhysical = 0;
 
 
+
 // Thanks to Jackson (http://jackson-t.ca/lg-driver-lpe.html)
 int DriverHelper::memmem(PBYTE haystack, DWORD haystack_size, PBYTE needle, DWORD needle_size)
 {
@@ -39,15 +40,15 @@ int DriverHelper::memmem(PBYTE haystack, DWORD haystack_size, PBYTE needle, DWOR
 
 
 
-int DriverHelper::getDeviceHandle() 
+int DriverHelper::getDeviceHandle(LPTSTR name)
 {
-	DriverHelper::hDeviceDrv = CreateFile("\\\\.\\GIO", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	DriverHelper::hDeviceDrv = CreateFile(name, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (DriverHelper::hDeviceDrv == INVALID_HANDLE_VALUE)
 	{
-		std::cout << "INVALID_HANDLE_VALUE: " << std::dec << GetLastError() << std::endl;
+		std::cout << "[-] Handle failed: " << std::dec << GetLastError() << std::endl;
 		return 1;
 	}
-
+	std::cout << "[+] HANDLE obtained" << std::endl;
 	return 0;
 }
 
