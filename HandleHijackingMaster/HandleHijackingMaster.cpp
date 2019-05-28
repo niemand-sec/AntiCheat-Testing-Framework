@@ -36,7 +36,7 @@ typedef struct _OBJECT_ATTRIBUTES {
 typedef NTSTATUS(NTAPI* TNtOpenProcess)(PHANDLE ProcessHandle, ACCESS_MASK AccessMask, POBJECT_ATTRIBUTES ObjectAttributes, PCLIENT_ID ClientID);
 TNtOpenProcess NtOpenProcess = NULL;
 
-int StartPipe(LPTSTR name)
+int StartPipe()
 {
 	//std::string namedPipeName = "\\\\.\\pipe\\driverbypass";
 	//LPCSTR namedPipe = namedPipeName.c_str();
@@ -188,7 +188,7 @@ int main()
 	}
 
 
-	if (!StartPipe(CheatHelper::namedPipeName))
+	if (!StartPipe())
 	{
 		return 0;
 	}
