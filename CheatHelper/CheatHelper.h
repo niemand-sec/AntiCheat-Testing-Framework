@@ -33,7 +33,7 @@ public:
 	static DWORD GetProcId(char* procName);
 	// Debuging Functions
 	static void ConsoleSetup(const char * title);
-	static void PrintBytes(PVOID buffer);
+	static void PrintBytes(PVOID buffer, SIZE_T  nSize);
 	// Memory functions
 	static int RPM(HANDLE  hProcess, LPCVOID lpBaseAddress,	LPVOID  lpBuffer, SIZE_T  nSize, SIZE_T  *lpNumberOfBytesRead);
 	static int WPM(HANDLE  hProcess, LPVOID  lpBaseAddress, LPCVOID lpBuffer, SIZE_T  nSize, SIZE_T  *lpNumberOfBytesWritten);

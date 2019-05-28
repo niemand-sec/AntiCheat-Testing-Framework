@@ -88,10 +88,30 @@ void CheatHelper::ConsoleSetup(const char * title)
 	freopen("CONIN$", "r", stdin);
 }
 
-void CheatHelper::PrintBytes(PVOID buffer)
+void CheatHelper::PrintBytes(PVOID buffer, SIZE_T  nSize)
 {
+	/*
 	for (int i = 0; i < sizeof(buffer); i++) {
 		std::cout << std::setfill('0') << std::setw(2) << std::hex << (int)((char*)buffer)[i] << " ";
+	}
+	std::cout << std::endl;
+	*/
+	/*
+	printf("[ ");
+	for (size_t i = 0; i < sizeof(buffer); i++)
+	{
+		printf("%02x ", ((char*)buffer)[i]);
+	}
+	printf("]\n");
+	*/
+	UCHAR * uBuf = (UCHAR*)buffer;
+	for (uint32_t i = 0; i != nSize; i++)
+	{
+		std::cout <<
+			std::hex <<           // output in hex
+			std::setw(2) <<       // each byte prints as two characters
+			static_cast<unsigned int>(uBuf[i]) << " ";
+			std::setfill('0'); // fill with 0 if not enough characters
 	}
 	std::cout << std::endl;
 }
@@ -107,8 +127,8 @@ int CheatHelper::RPM(HANDLE  hProcess, LPCVOID lpBaseAddress, LPVOID  lpBuffer, 
 		return 1;
 	}
 	//std::cout << "[+] ReadProcessMemory: " << lpBuffer << std::endl;
-	std::cout << "[+] ReadProcessMemory: ";
-	CheatHelper::PrintBytes(lpBuffer);
+	std::cout << "[+] ReadProcessMemory: \n\t";
+	CheatHelper::PrintBytes((PVOID)lpBuffer, nSize);
 	return 0;
 }
 
@@ -121,8 +141,8 @@ int CheatHelper::WPM(HANDLE  hProcess, LPVOID  lpBaseAddress, LPCVOID lpBuffer, 
 		return 1;
 	}
 	//std::cout << "[+] WriteProcessMemory: " << lpBuffer << std::endl;
-	std::cout << "[+] WriteProcessMemory: " ;
-	CheatHelper::PrintBytes((PVOID)lpBuffer);
+	std::cout << "[+] WriteProcessMemory: \n\t" ;
+	CheatHelper::PrintBytes((PVOID)lpBuffer, nSize);
 	return 0;
 }
 
@@ -137,8 +157,8 @@ int CheatHelper::NtRVM(HANDLE ProcessHandle, PVOID BaseAddress, PVOID Buffer, UL
 		return 1;
 	}
 	//std::cout << "[+] NtReadVirtualMemory: " << &Buffer << std::endl;
-	std::cout << "[+] NtReadVirtualMemory: ";
-	CheatHelper::PrintBytes((PVOID)Buffer);
+	std::cout << "[+] NtReadVirtualMemory: \n\t";
+	CheatHelper::PrintBytes((PVOID)Buffer, NumberOfBytesToRead);
 	return 0;
 
 }
@@ -155,8 +175,8 @@ int CheatHelper::NtWVM(HANDLE ProcessHandle, PVOID BaseAddress, PVOID Buffer, UL
 		return 1;
 	}
 	//std::cout << "[+] NtWriteVirtualMemory: " << &Buffer << std::endl;
-	std::cout << "[+] NtWriteVirtualMemory: ";
-	CheatHelper::PrintBytes((PVOID)Buffer);
+	std::cout << "[+] NtWriteVirtualMemory: \n\t";
+	CheatHelper::PrintBytes((PVOID)Buffer, NumberOfBytesToWrite);
 	return 0;
 }
 
@@ -170,8 +190,8 @@ int CheatHelper::ZwRVM(HANDLE hProc, PVOID pBaseAddress, PVOID pBuffer, ULONG Nu
 		return 1;
 	}
 	//std::cout << "[+] NtReadVirtualMemory: " << &Buffer << std::endl;
-	std::cout << "[+] ZwReadVirtualMemory: ";
-	CheatHelper::PrintBytes((PVOID)pBuffer);
+	std::cout << "[+] ZwReadVirtualMemory: \n\t";
+	CheatHelper::PrintBytes((PVOID)pBuffer, NumberOfBytesToRead);
 	return 0;
 
 }
@@ -187,8 +207,8 @@ int CheatHelper::ZwWVM(HANDLE hProc, PVOID pBaseAddress, PVOID pBuffer, ULONG Nu
 		return 1;
 	}
 	//std::cout << "[+] NtWriteVirtualMemory: " << &Buffer << std::endl;
-	std::cout << "[+] ZwWriteVirtualMemory: ";
-	CheatHelper::PrintBytes((PVOID)pBuffer);
+	std::cout << "[+] ZwWriteVirtualMemory: \n\t";
+	CheatHelper::PrintBytes((PVOID)pBuffer, NumberOfBytesToWrite);
 	return 0;
 }
 
@@ -249,7 +269,7 @@ void CheatHelper::prepareRequest(PipeMessageRequest &PMRequest)
 		std::cout << "[+] RPM" << std::endl;
 		PMRequest.address = CheatHelper::RPMAddress;
 		SecureZeroMemory(PMRequest.buffer, BUFSIZE);
-		PMRequest.size = CheatHelper::RPMBufferSize;
+		PMRequest.size = (int)CheatHelper::RPMBufferSize;
 		break;
 	}
 	case 2: //WPM
@@ -257,7 +277,7 @@ void CheatHelper::prepareRequest(PipeMessageRequest &PMRequest)
 		std::cout << "[+] WPM" << std::endl;
 		PMRequest.address = CheatHelper::WPMAddress;
 		strncpy_s(PMRequest.buffer, CheatHelper::WPMBuffer, BUFSIZE);
-		PMRequest.size = CheatHelper::WPMBufferSize;
+		PMRequest.size = (int)CheatHelper::WPMBufferSize;
 		break;
 	}
 	case 3: //CreatRemoteThread
@@ -270,7 +290,7 @@ void CheatHelper::prepareRequest(PipeMessageRequest &PMRequest)
 		std::cout << "[+] NtReadVirtualMemory" << std::endl;
 		PMRequest.address = CheatHelper::ntRVMAddress;
 		SecureZeroMemory(PMRequest.buffer, BUFSIZE);
-		PMRequest.size = CheatHelper::ntRVMBufferSize;
+		PMRequest.size = (int)CheatHelper::ntRVMBufferSize;
 		break;
 	}
 	case 5: //NtWriteVirtualMemory
@@ -278,7 +298,7 @@ void CheatHelper::prepareRequest(PipeMessageRequest &PMRequest)
 		std::cout << "[+] NtWriteVirtualMemory" << std::endl;
 		PMRequest.address = CheatHelper::ntWVMAddress;
 		strncpy_s(PMRequest.buffer, CheatHelper::ntWVMBuffer, BUFSIZE);
-		PMRequest.size = CheatHelper::ntWVMBufferSize;
+		PMRequest.size = (int)CheatHelper::ntWVMBufferSize;
 		break;
 	}
 	case 6: //ZwReadVirtualMemory
@@ -286,7 +306,7 @@ void CheatHelper::prepareRequest(PipeMessageRequest &PMRequest)
 		std::cout << "[+] ZwReadVirtualMemory" << std::endl;
 		PMRequest.address = CheatHelper::ZwRVMAddress;
 		SecureZeroMemory(PMRequest.buffer, BUFSIZE);
-		PMRequest.size = CheatHelper::ZwRVMBufferSize;
+		PMRequest.size = (int)CheatHelper::ZwRVMBufferSize;
 		break;
 	}
 	case 7: //ZwWriteVirtualMemory
@@ -294,7 +314,7 @@ void CheatHelper::prepareRequest(PipeMessageRequest &PMRequest)
 		std::cout << "[+] ZwWriteVirtualMemory" << std::endl;
 		PMRequest.address = CheatHelper::ZwWVMAddress;
 		strncpy_s(PMRequest.buffer, CheatHelper::ZwWVMBuffer, BUFSIZE);
-		PMRequest.size = CheatHelper::ZwWVMBufferSize;
+		PMRequest.size = (int)CheatHelper::ZwWVMBufferSize;
 		break;
 	}
 	}
@@ -448,18 +468,18 @@ bool CheatHelper::loadConfig()
 	SecureZeroMemory(CheatHelper::ZwWVMBuffer, BUFSIZE);
 
 
-	GetPrivateProfileString("Buffers", "RPMBuffer", "calc.exe", CheatHelper::RPMBuffer, CheatHelper::RPMBufferSize, configFile);
-	GetPrivateProfileString("Buffers", "WPMBuffer", "calc.exe", CheatHelper::WPMBuffer, CheatHelper::WPMBufferSize, configFile);
-	GetPrivateProfileString("Buffers", "ntRVMBuffer", "calc.exe", CheatHelper::ntRVMBuffer, CheatHelper::ntRVMBufferSize, configFile);
-	GetPrivateProfileString("Buffers", "ntWVMBuffer", "calc.exe", CheatHelper::ntWVMBuffer, CheatHelper::ntWVMBufferSize, configFile);
-	GetPrivateProfileString("Buffers", "ZwRVMBuffer", "calc.exe", CheatHelper::ZwRVMBuffer, CheatHelper::ZwRVMBufferSize, configFile);
-	GetPrivateProfileString("Buffers", "ZwWVMBuffer", "calc.exe", CheatHelper::ZwWVMBuffer, CheatHelper::ZwWVMBufferSize, configFile);
+	GetPrivateProfileString("Buffers", "RPMBuffer", "calc.exe", CheatHelper::RPMBuffer, (DWORD)CheatHelper::RPMBufferSize, configFile);
+	GetPrivateProfileString("Buffers", "WPMBuffer", "calc.exe", CheatHelper::WPMBuffer, (DWORD)CheatHelper::WPMBufferSize, configFile);
+	GetPrivateProfileString("Buffers", "ntRVMBuffer", "calc.exe", CheatHelper::ntRVMBuffer, (DWORD)CheatHelper::ntRVMBufferSize, configFile);
+	GetPrivateProfileString("Buffers", "ntWVMBuffer", "calc.exe", CheatHelper::ntWVMBuffer, (DWORD)CheatHelper::ntWVMBufferSize, configFile);
+	GetPrivateProfileString("Buffers", "ZwRVMBuffer", "calc.exe", CheatHelper::ZwRVMBuffer, (DWORD)CheatHelper::ZwRVMBufferSize, configFile);
+	GetPrivateProfileString("Buffers", "ZwWVMBuffer", "calc.exe", CheatHelper::ZwWVMBuffer, (DWORD)CheatHelper::ZwWVMBufferSize, configFile);
 	
 	std::cout << "[.] RPMBuffer " << CheatHelper::RPMBuffer << std::endl;
 	std::cout << "[.] WPMBuffer " << CheatHelper::WPMBuffer << std::endl;
 	std::cout << "[.] ntWPMBuffer " << CheatHelper::ntRVMBuffer << std::endl;
 	std::cout << "[.] ntWPMBuffer " << CheatHelper::ntWVMBuffer << std::endl;
-	std::cout << "[.] ZwWPMBuffer " << CheatHelper::ZwRVMBuffer << std::endl;
+	std::cout << "[.] ZwRPMBuffer " << CheatHelper::ZwRVMBuffer << std::endl;
 	std::cout << "[.] ZwWPMBuffer " << CheatHelper::ZwWVMBuffer << std::endl;
 
 	//Shared Memory

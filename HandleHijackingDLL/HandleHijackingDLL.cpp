@@ -50,7 +50,7 @@ int WritePipe(struct PipeMessageResponse response)
 	std::cout << "\t[+] status: " << response.status << std::endl;
 	std::cout << "\t[+] bytesRead: " << response.bytesRead << std::endl;
 	std::cout << "\t[+] buffer: ";
-	CheatHelper::PrintBytes((PVOID)response.buffer);
+	CheatHelper::PrintBytes((PVOID)response.buffer, response.bytesRead);
 	bWrite = WriteFile(hNamedPipe, &response, sizeof(PipeMessageResponse), &dwWritten, NULL);
 	if (!bWrite)
 	{
@@ -88,7 +88,7 @@ int ReadPipe() {
 		std::cout << "\t[+] address: 0x" << PMRequest.address << std::endl;
 		std::cout << "\t[+] size: " << PMRequest.size << std::endl;
 		std::cout << "\t[+] buffer: ";
-		CheatHelper::PrintBytes((PVOID)PMRequest.buffer);
+		CheatHelper::PrintBytes((PVOID)PMRequest.buffer, PMRequest.size);
 		return 1;
 	}
 }
@@ -204,7 +204,7 @@ int handleAction()
 	default:
 	{
 		std::cout << "Default" << std::endl;
-		break;
+		return 1;
 	}
 	}
 }

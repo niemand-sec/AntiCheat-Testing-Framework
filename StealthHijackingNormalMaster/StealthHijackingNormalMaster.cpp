@@ -27,7 +27,7 @@ int ReadFileMapping()
 	std::cout << "\t[+] Status: " << PMResponse.status << std::endl;
 	std::cout << "\t[+] bytesRead: " << PMResponse.bytesRead << std::endl;
 	std::cout << "\t[+] buffer: ";
-	CheatHelper::PrintBytes((PVOID)PMResponse.buffer);
+	CheatHelper::PrintBytes((PVOID)PMResponse.buffer, (SIZE_T)PMResponse.bytesRead);
 	return 1;
 }
 
@@ -41,7 +41,7 @@ int WriteFileMapping()
 	std::cout << "\t[+] address: 0x" << std::hex << PMRequest.address << std::endl;
 	std::cout << "\t[+] size: " << PMRequest.size << std::endl;
 	std::cout << "\t[+] buffer: ";
-	CheatHelper::PrintBytes((PVOID)PMRequest.buffer);
+	CheatHelper::PrintBytes((PVOID)PMRequest.buffer, (SIZE_T)PMRequest.size);
 	CopyMemory((void*)(pFileMapMem), &PMRequest, sizeof(PipeMessageRequest));
 	return true;
 }
@@ -52,7 +52,7 @@ bool Init()
 	CheatHelper::loadConfig();
 
 	//fileMapName = "Global\\StealthHijacking";
-	hFileMap = CreateFileMappingA(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE | SEC_COMMIT | SEC_NOCACHE, 0, fileMapSize, CheatHelper::fileMapName);
+	hFileMap = CreateFileMappingA(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE | SEC_COMMIT | SEC_NOCACHE, 0, (DWORD)fileMapSize, CheatHelper::fileMapName);
 	if (!hFileMap)
 	{
 		std::cout << "[-] CreateFileMappingA failed: " << std::dec << GetLastError() << std::endl;

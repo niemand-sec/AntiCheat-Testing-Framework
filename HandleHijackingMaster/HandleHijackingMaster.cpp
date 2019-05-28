@@ -85,7 +85,7 @@ int ReadPipe() {
 		std::cout << "\t[+] Status: " << PMResponse.status << std::endl;
 		std::cout << "\t[+] bytesRead: " << PMResponse.bytesRead << std::endl;
 		std::cout << "\t[+] buffer: ";
-		CheatHelper::PrintBytes((PVOID)PMResponse.buffer);
+		CheatHelper::PrintBytes((PVOID)PMResponse.buffer, PMResponse.bytesRead);
 		return 1;
 	}
 }
@@ -102,7 +102,7 @@ int WritePipe()
 	std::cout << "\t[+] address: 0x" << std::hex << PMRequest.address << std::endl;
 	std::cout << "\t[+] size: " << PMRequest.size << std::endl;
 	std::cout << "\t[+] buffer: ";
-	CheatHelper::PrintBytes((PVOID)PMRequest.buffer);
+	CheatHelper::PrintBytes((PVOID)PMRequest.buffer, PMRequest.size);
 	bWrite = WriteFile(hPipeServer, &PMRequest, sizeof(PipeMessageRequest), &dwWritten, NULL);
 	if (!bWrite)
 	{

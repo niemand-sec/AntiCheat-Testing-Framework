@@ -125,7 +125,7 @@ int main()
 	std::cout << "[+] Init\n";
 	CheatHelper::loadConfig();
 
-	
+	std::cout << "[+] Waiting for target process\n";
 	while (true)
 	{
 		targetPid = CheatHelper::GetProcId(CheatHelper::targetProc);
