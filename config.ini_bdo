@@ -1,0 +1,45 @@
+[States]
+bDelayExecution=0
+[Addresses]
+RPMAddressHigh=0x1
+RPMAddressLow=0x44BC6000
+RPMAddress=0x0
+WPMAddressHigh=0x00000001
+WPMAddressLow=0x44BC6010
+WPMAddress=0x0
+ntRVMAddressHigh=0x00000001
+ntRVMAddressLow=0x44BC6020
+ntRVMAddress=0x0
+ntWVMAddressHigh=0x00000001
+ntWVMAddressLow=0x44BC6030
+ntWVMAddress=0x0
+ZwRVMAddressHigh=0x00000001
+ZwRVMAddressLow=0x44BC6040
+ZwRVMAddress=0x0
+ZwWVMAddressHigh=0x00000001
+ZwWVMAddressLow=0x44BC6050
+ZwWVMAddress=0x0
+[Handles]
+requestHandleNP=0x1798
+requestHandleFM=0x1798
+[Buffers]
+#SIZE MUST BE SIZE+1
+RPMBuffer=TTTT1
+RPMBufferSize=0x6
+WPMBuffer=TTTT2
+WPMBufferSize=0x6
+ntRVMBuffer=TTTT3
+ntRVMBufferSize=0x6
+ntWVMBuffer=TTTT4
+ntWVMBufferSize=0x6
+ZwRVMBuffer=TTTT5
+ZwRVMBufferSize=0x6
+ZwWVMBuffer=TTTT6
+ZwWVMBufferSize=0x6
+[Strings]
+targetProc=BlackDesert64.exe
+jumpProc=lsass.exe
+#Edit in DLL if you changed it here
+namedPipeName=\\.\\pipe\\driverbypass
+#Edit in DLL if you changed it here
+fileMapName=Global\StealthHijacking
