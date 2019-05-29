@@ -433,6 +433,7 @@ bool CheatHelper::loadConfig()
 	std::cout << "[.] ntWVMAddress 0x" << std::hex << CheatHelper::ntWVMAddress << std::endl;
 	std::cout << "[.] ZwRVMAddress 0x" << std::hex << CheatHelper::ZwRVMAddress << std::endl;
 	std::cout << "[.] ZwWVMAddress 0x" << std::hex << CheatHelper::ZwWVMAddress << std::endl;
+	std::cout << "[.] startAddressPhy 0x" << std::hex << CheatHelper::startAddressPhy << std::endl;
 
 
 	//Handles

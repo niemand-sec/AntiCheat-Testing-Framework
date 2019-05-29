@@ -18,6 +18,43 @@ typedef struct {
 	DWORD PriorityClass;
 } _EPROCESS_PATTERN;
 
+
+// Structure of MAP
+typedef struct _READ_REQUEST {
+	DWORD InterfaceType;
+	DWORD Bus;
+	ULONG64 PhysicalAddress;
+	DWORD IOSpace;
+	DWORD size;
+} READ_REQUEST;
+
+typedef struct _WRITE_REQUEST {
+	DWORDLONG address;
+	DWORD length;
+	DWORDLONG buffer;
+} WRITE_REQUEST;
+
+typedef struct _MEMCPY_REQUEST {
+	ULONG64 dest;
+	ULONG64 src;
+	DWORD size;
+} MEMCPY_REQUEST;
+
+
+typedef struct _HANDLE_TABLE_ENTRY
+{
+	//This struct is incomplete, but we dont really care about the other fields
+	ULONGLONG Value;
+	ULONGLONG GrantedAccess : 25;
+} HANDLE_TABLE_ENTRY, *PHANDLE_TABLE_ENTRY;
+
+typedef struct _HANDLE_TABLE
+{
+	CHAR fill[100];
+} HANDLE_TABLE, *PHANDLE_TABLE;
+
+
+
 class DriverHelper
 {
 public:
