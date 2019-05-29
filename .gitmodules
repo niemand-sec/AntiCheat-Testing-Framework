@@ -1,0 +1,4 @@
+[submodule "LuaHook"]
+	path = LuaHook
+	url = https://github.com/niemand-sec/LuaHook.git
+	branch = ACTF
