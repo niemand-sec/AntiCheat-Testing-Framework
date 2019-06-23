@@ -24,10 +24,17 @@ PipeMessageResponse PMResponse;
 int ReadFileMapping()
 {
 	CopyMemory(&PMResponse, (void*)(pFileMapMem), sizeof(PipeMessageResponse));
-	std::cout << "\t[+] Status: " << PMResponse.status << std::endl;
-	std::cout << "\t[+] bytesRead: " << PMResponse.bytesRead << std::endl;
-	std::cout << "\t[+] buffer: ";
-	CheatHelper::PrintBytes((PVOID)PMResponse.buffer, (SIZE_T)PMResponse.bytesRead);
+	if (PMResponse.status == 0)
+	{
+		std::cout << "\t[+] Status: Successful" << std::endl;
+	}
+	else
+	{
+		std::cout << "\t[-] Status: Unsuccessful" << std::endl;
+	}
+	//std::cout << "\t[+] bytesRead: " << PMResponse.bytesRead << std::endl;
+	//std::cout << "\t[+] buffer: ";
+	//CheatHelper::PrintBytes((PVOID)PMResponse.buffer, (SIZE_T)PMResponse.bytesRead);
 	return 1;
 }
 
@@ -126,7 +133,7 @@ int main()
 		CloseHandle(hFileMap);
 		UnmapViewOfFile(pFileMapMem);
 	}
-
+	Sleep(1000000);
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
