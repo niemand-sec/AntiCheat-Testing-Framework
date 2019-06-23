@@ -82,10 +82,21 @@ int ReadPipe() {
 	}
 	else
 	{
-		std::cout << "\t[+] Status: " << PMResponse.status << std::endl;
-		std::cout << "\t[+] bytesRead: " << PMResponse.bytesRead << std::endl;
-		std::cout << "\t[+] buffer: ";
-		CheatHelper::PrintBytes((PVOID)PMResponse.buffer, PMResponse.bytesRead);
+		if (PMResponse.status == 0)
+		{
+			std::cout << "\t[+] Status: Successful" << std::endl;
+			if (PMRequest.action == 1 || PMRequest.action == 4 || PMRequest.action == 6)
+			{
+				std::cout << "\t[+] bytesRead: " << PMResponse.bytesRead << std::endl;
+				std::cout << "\t[+] buffer: ";
+				CheatHelper::PrintBytes((PVOID)PMResponse.buffer, PMResponse.bytesRead);
+			}
+		}
+		else
+		{
+			std::cout << "\t[-] Status: Unsuccessful" << std::endl;
+		}
+		
 		return 1;
 	}
 }
