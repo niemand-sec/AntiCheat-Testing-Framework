@@ -31,5 +31,6 @@
     <None Include="LoadDriver.bat">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="Readme.md" />
   </ItemGroup>
 </Project>

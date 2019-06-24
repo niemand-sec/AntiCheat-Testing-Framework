@@ -43,7 +43,6 @@ typedef struct _MEMCPY_REQUEST {
 
 typedef struct _HANDLE_TABLE_ENTRY
 {
-	//This struct is incomplete, but we dont really care about the other fields
 	ULONGLONG Value;
 	ULONGLONG GrantedAccess : 25;
 } HANDLE_TABLE_ENTRY, *PHANDLE_TABLE_ENTRY;
