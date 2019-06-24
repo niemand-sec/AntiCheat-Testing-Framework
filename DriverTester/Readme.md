@@ -1,21 +1,28 @@
-# HandleHijackingMaster
+# DriverTester
 
 ## Introduction
 
 
 ## Usage
 
-This module is used combinaded with **HandleHijackingDLL**. This is the "command and control" implementation. Has to be executed before injecting the DLL. 
+This module exploits **Razer Synapse rzpnk.sys (2.20.15.1104) - CVE-2017-9769** to open a new HANDLE to the game from kernel mode. Then it attempts to access to the memory of the game by using this handle.
 
-HandleHijakingMaster will create a NamedPipe that the DLL will use to receive instructions and then return information to the master (where all the bot logic should be located).
+> A specially crafted IOCTL can be issued to the rzpnk.sys driver in Razer Synapse 2.20.15.1104 that is forwarded to ZwOpenProcess allowing a handle to be opened to an arbitrary process.
+References
+
+__Actions that this module attemps:__
+
+-  ReadProcessMemory
+-  WriteProcessMemory
+-  ntReadVirtualMemory
+-  ntWriteVirtualMemory
+-  ZwReadVirtualMemory
+-  ZwWriteVirtualMemory
 
 ## Configuration
 
 This module requires configuration:
 
-- ~~Address to Read/Write (TODO: implement to use multiple addresses, not just one)~~
-- ~~Sequence of actions to perform (TODO: now it tries everything from 0 to 5, implement a list)~~
-- ~~HANDLE to use as pivot (TODO: It is hardocded now so it need to be recompiled, it would be better to enumerate handles and identify the correct one).~~
 - The following variables in config.ini need to the provided:
 
 [Addresses]
@@ -40,11 +47,6 @@ ZwWVMAddressLow=0x58A60000
 ZwWVMAddress=0x0
 ```
 
-[Handles]
-
-```
-requestHandleNP=0x15FC
-```
 
 [Buffers]
 ```
@@ -65,10 +67,7 @@ ZwWVMBufferSize=0x6
 
 [Strings]
 ```
-targetProc=BlackDesert64.exe
-privotProc=lsass.exe
-#Edit in DLL if you changed it here
-namedPipeName=\\.\\pipe\\driverbypass
+targetProc=r5apex.exe
 ```
 
 ## Combination with other techniques
@@ -76,3 +75,6 @@ namedPipeName=\\.\\pipe\\driverbypass
 - **RUNASKINVOKER**: By executing the game using this options we will prevent the Anti-cheat to fully protect the game end load the driver.
 
 
+## Links
+
+https://warroom.rsmus.com/cve-2017-9769/

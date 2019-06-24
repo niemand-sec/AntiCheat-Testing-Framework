@@ -13,7 +13,30 @@ HandleHijakingMaster will create a NamedPipe that the DLL will use to receive in
 
 ## Configuration
 
-This module requries configuration:
+This module requires configuration:
+
+- The following variables in config.ini need to the provided:
+
+[Addresses]
+```
+startAddressPhyHigh=0x00000000
+startAddressPhyLow=0x58A60000
+startAddressPhy=0x0
+```
+
+[Handles]
+```
+requestHandleDrv=0x15FC
+```
+
+[Strings]
+```
+privotProc=lsass.exe
+driverName=\\.\GIO
+```
+
+
+## Notes
 
 - startPhysicalAddress: Physical memory to start looking for EPROCESS structures.
 - driverName: Name of the driver device to exploit
