@@ -38,4 +38,7 @@
       <Filter>Source Files</Filter>
     </MASM>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\DriverDisabler\README.md" />
+  </ItemGroup>
 </Project>
