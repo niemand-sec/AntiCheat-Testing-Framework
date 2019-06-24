@@ -261,12 +261,23 @@ __pycache__/
 *.pyc
 
 # IDA Files
-.id0
-.id1
-.nam
-.til
-.i64
+*.id0
+*.id1
+*.nam
+*.til
 *.i64
+
+# Libs and Drivers
+*.sys
+/resources/gdrv.sys
+/resources/rzpnk.sys
+/resources/gdrv.i64
+/resources/rzpnk.i64
+/resources/rzpnk.id0
+/resources/rzpnk.id1
+/resources/rzpnk.nam
+/resources/rzpnk.til
+/resources/rzpnk_20190322115842.i64
 /resources/MinHook/lib/libMinHook-x86-v90-mtd.lib
 /resources/MinHook/lib/libMinHook-x86-v90-mt.lib
 /resources/MinHook/lib/libMinHook-x86-v90-mdd.lib
