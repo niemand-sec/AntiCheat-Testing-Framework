@@ -267,7 +267,9 @@ __pycache__/
 *.til
 *.i64
 
-# Libs and Drivers
+# Libs and Drivers and back up files
+config.ini_apex
+config.ini_bdo
 *.sys
 /resources/gdrv.sys
 /resources/rzpnk.sys
