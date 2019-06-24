@@ -39,6 +39,6 @@
     </MASM>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\DriverDisabler\README.md" />
+    <None Include="Readme.md" />
   </ItemGroup>
 </Project>

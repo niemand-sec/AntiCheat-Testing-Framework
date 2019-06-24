@@ -166,7 +166,7 @@
     <MASM Include="ZwReadWriteVM.asm" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\DriverDisabler\README.md" />
+    <None Include="Readme.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
