@@ -10,7 +10,7 @@ Cuztomization should be simple due to the modularity of the code.
 
 Most of the settings can be done by using config.ini file, however, some modules may require particular settings on the code, depending on your intentions.
 
-
+Remember to change location of config.ini file at CheatHelper/CheatHelper.cpp (variable configFile)
 
 # About this Project
 
