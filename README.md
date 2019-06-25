@@ -1,9 +1,9 @@
 # AntiCheat-Testing-Framework
-Framework for testing any Anti-Cheat
+Framework for testing any Anti-Cheat. 
 
-This can be used as Template or Code Base to test any Anti-Cheat and learn along the way.
+**Description for each module can be found on each folder**. This can be used as Template or Code Base to test any Anti-Cheat and learn along the way.
 
-Description for each module can be found on each folder. Modules can be used together or separated. 
+ Modules can be used together or separated. 
 Cuztomization should be simple due to the modularity of the code.
 
 # Usage
