@@ -2,6 +2,8 @@
 Framework to test any Anti-Cheat on the market. This can be used as Template or Code Base to test any Anti-Cheat and learn along the way.
 All this code is the result of a research done for Recon2019 (Montreal). 
 
+Twitter: [@Niemand_sec](https://twitter.com/niemand_sec)
+
 - **Description for each module can be found on each folder**.
 - Modules can be used together or separated. 
 - Cuztomization should be simple due to the modularity of the code.
