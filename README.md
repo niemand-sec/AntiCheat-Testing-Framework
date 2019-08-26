@@ -16,6 +16,19 @@ Most of the settings can be done by using config.ini file, however, some modules
 
 > Remember to change location of config.ini file at CheatHelper/CheatHelper.cpp (variable configFile)
 
+# Modules (more coming in the future)
+
+- CheatHelper
+- DriverDisabler
+- DriverHelper
+- DriverTester
+- HandleElevationDriver
+- HandleHijackingDLL
+- HandleHijackingMaster
+- LuaHook
+- StealthHijackingNormalDLL
+- StealthHijackingNormalMaster
+
 # About this Project
 
 All this code is a result of the Researching presented at Recon 2019 with the call "Unveiling the underground world of Anti-Cheats".
