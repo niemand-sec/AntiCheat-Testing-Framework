@@ -383,11 +383,12 @@ char CheatHelper::driverName[];
 bool CheatHelper::loadConfig()
 {
 	//LPCTSTR configFile = _T(".\\..\\..\\config.ini");
-	LPCTSTR configFile = _T("F:\\Recon2019\\AntiCheat-Testing-Framework\\config.ini");
+	LPCTSTR configFile = _T("E:\\Recon2019\\AntiCheat-Testing-Framework-Private\\config.ini");
+	std::cout << "[+] Reading config file." << std::endl;
 
 	//States
 	CheatHelper::bDelayExecution = (bool)GetPrivateProfileInt("Addresses", "bDelayExecution", 0, configFile);
-	std::cout << "[.] bDelayExecution " << std::hex << CheatHelper::bDelayExecution << std::endl;
+	std::cout << "\t[.] bDelayExecution " << std::hex << CheatHelper::bDelayExecution << std::endl;
 
 	//Addresses
 	#if defined(ENV64BIT)
@@ -427,22 +428,22 @@ bool CheatHelper::loadConfig()
 #endif
 
 
-	std::cout << "[.] RPMAddress 0x" << std::hex << CheatHelper::RPMAddress << std::endl;
-	std::cout << "[.] WPMAddress 0x" << std::hex << CheatHelper::WPMAddress << std::endl;
-	std::cout << "[.] ntRVMAddress 0x" << std::hex << CheatHelper::ntRVMAddress << std::endl;
-	std::cout << "[.] ntWVMAddress 0x" << std::hex << CheatHelper::ntWVMAddress << std::endl;
-	std::cout << "[.] ZwRVMAddress 0x" << std::hex << CheatHelper::ZwRVMAddress << std::endl;
-	std::cout << "[.] ZwWVMAddress 0x" << std::hex << CheatHelper::ZwWVMAddress << std::endl;
-	std::cout << "[.] startAddressPhy 0x" << std::hex << CheatHelper::startAddressPhy << std::endl;
+	std::cout << "\t[.] RPMAddress 0x" << std::hex << CheatHelper::RPMAddress << std::endl;
+	std::cout << "\t[.] WPMAddress 0x" << std::hex << CheatHelper::WPMAddress << std::endl;
+	std::cout << "\t[.] ntRVMAddress 0x" << std::hex << CheatHelper::ntRVMAddress << std::endl;
+	std::cout << "\t[.] ntWVMAddress 0x" << std::hex << CheatHelper::ntWVMAddress << std::endl;
+	std::cout << "\t[.] ZwRVMAddress 0x" << std::hex << CheatHelper::ZwRVMAddress << std::endl;
+	std::cout << "\t[.] ZwWVMAddress 0x" << std::hex << CheatHelper::ZwWVMAddress << std::endl;
+	std::cout << "\t[.] startAddressPhy 0x" << std::hex << CheatHelper::startAddressPhy << std::endl;
 
 
 	//Handles
 	CheatHelper::requestHandleNP = (HANDLE)GetPrivateProfileInt("Handles", "requestHandleNP", 0x0, configFile);
 	CheatHelper::requestHandleFM = (HANDLE)GetPrivateProfileInt("Handles", "requestHandleFM", 0x0, configFile);
 	CheatHelper::requestHandleDrv = (HANDLE)GetPrivateProfileInt("Handles", "requestHandleDrv", 0x0, configFile);
-	std::cout << "[.] requestHandleNP 0x" << std::hex << CheatHelper::requestHandleNP << std::endl;
-	std::cout << "[.] requestHandleFM 0x" << std::hex << CheatHelper::requestHandleFM << std::endl;
-	std::cout << "[.] requestHandleDrv 0x" << std::hex << CheatHelper::requestHandleDrv << std::endl;
+	std::cout << "\t[.] requestHandleNP 0x" << std::hex << CheatHelper::requestHandleNP << std::endl;
+	std::cout << "\t[.] requestHandleFM 0x" << std::hex << CheatHelper::requestHandleFM << std::endl;
+	std::cout << "\t[.] requestHandleDrv 0x" << std::hex << CheatHelper::requestHandleDrv << std::endl;
 
 
 	//Buffers
@@ -454,12 +455,12 @@ bool CheatHelper::loadConfig()
 	CheatHelper::ZwRVMBufferSize = GetPrivateProfileInt("Buffers", "ZwRVMBufferSize", BUFSIZE, configFile);
 	CheatHelper::ZwWVMBufferSize = GetPrivateProfileInt("Buffers", "ZwWVMBufferSize", BUFSIZE, configFile);
 
-	std::cout << "[.] RPMBufferSize 0x" << std::hex << CheatHelper::RPMBufferSize << std::endl;
-	std::cout << "[.] WPMBufferSize 0x" << std::hex << CheatHelper::WPMBufferSize << std::endl;
-	std::cout << "[.] ntRVMBufferSize 0x" << std::hex << CheatHelper::ntRVMBufferSize << std::endl;
-	std::cout << "[.] ntWVMBufferSize 0x" << std::hex << CheatHelper::ntWVMBufferSize << std::endl;
-	std::cout << "[.] ZwRVMBufferSize 0x" << std::hex << CheatHelper::ZwRVMBufferSize << std::endl;
-	std::cout << "[.] ZwWVMBufferSize 0x" << std::hex << CheatHelper::ZwWVMBufferSize << std::endl;
+	std::cout << "\t[.] RPMBufferSize 0x" << std::hex << CheatHelper::RPMBufferSize << std::endl;
+	std::cout << "\t[.] WPMBufferSize 0x" << std::hex << CheatHelper::WPMBufferSize << std::endl;
+	std::cout << "\t[.] ntRVMBufferSize 0x" << std::hex << CheatHelper::ntRVMBufferSize << std::endl;
+	std::cout << "\t[.] ntWVMBufferSize 0x" << std::hex << CheatHelper::ntWVMBufferSize << std::endl;
+	std::cout << "\t[.] ZwRVMBufferSize 0x" << std::hex << CheatHelper::ZwRVMBufferSize << std::endl;
+	std::cout << "\t[.] ZwWVMBufferSize 0x" << std::hex << CheatHelper::ZwWVMBufferSize << std::endl;
 
 	SecureZeroMemory(CheatHelper::RPMBuffer, BUFSIZE);
 	SecureZeroMemory(CheatHelper::WPMBuffer, BUFSIZE);
@@ -476,12 +477,12 @@ bool CheatHelper::loadConfig()
 	GetPrivateProfileString("Buffers", "ZwRVMBuffer", "calc.exe", CheatHelper::ZwRVMBuffer, (DWORD)CheatHelper::ZwRVMBufferSize, configFile);
 	GetPrivateProfileString("Buffers", "ZwWVMBuffer", "calc.exe", CheatHelper::ZwWVMBuffer, (DWORD)CheatHelper::ZwWVMBufferSize, configFile);
 	
-	std::cout << "[.] RPMBuffer " << CheatHelper::RPMBuffer << std::endl;
-	std::cout << "[.] WPMBuffer " << CheatHelper::WPMBuffer << std::endl;
-	std::cout << "[.] ntWPMBuffer " << CheatHelper::ntRVMBuffer << std::endl;
-	std::cout << "[.] ntWPMBuffer " << CheatHelper::ntWVMBuffer << std::endl;
-	std::cout << "[.] ZwRPMBuffer " << CheatHelper::ZwRVMBuffer << std::endl;
-	std::cout << "[.] ZwWPMBuffer " << CheatHelper::ZwWVMBuffer << std::endl;
+	std::cout << "\t[.] RPMBuffer " << CheatHelper::RPMBuffer << std::endl;
+	std::cout << "\t[.] WPMBuffer " << CheatHelper::WPMBuffer << std::endl;
+	std::cout << "\t[.] ntWPMBuffer " << CheatHelper::ntRVMBuffer << std::endl;
+	std::cout << "\t[.] ntWPMBuffer " << CheatHelper::ntWVMBuffer << std::endl;
+	std::cout << "\t[.] ZwRPMBuffer " << CheatHelper::ZwRVMBuffer << std::endl;
+	std::cout << "\t[.] ZwWPMBuffer " << CheatHelper::ZwWVMBuffer << std::endl;
 
 	//Shared Memory
 	//GetPrivateProfileString("SharedMemory", "sPipeName", "calc.exe", CheatHelper::sPipeName, BUFSIZE, configFile);
@@ -494,11 +495,11 @@ bool CheatHelper::loadConfig()
 	GetPrivateProfileString("Strings", "fileMapName", "Global\StealthHijacking", CheatHelper::fileMapName, BUFSIZE, configFile);
 	GetPrivateProfileString("Strings", "driverName", "\\.\\GIO", CheatHelper::driverName, BUFSIZE, configFile);
 
-	std::cout << "[.] targetProc " << CheatHelper::targetProc << std::endl;
-	std::cout << "[.] privotProc " << CheatHelper::privotProc << std::endl;
-	std::cout << "[.] namedPipeName " << CheatHelper::namedPipeName << std::endl;
-	std::cout << "[.] fileMapName " << CheatHelper::fileMapName << std::endl;
-	std::cout << "[.] driverName " << CheatHelper::driverName << std::endl;
+	std::cout << "\t[.] targetProc " << CheatHelper::targetProc << std::endl;
+	std::cout << "\t[.] privotProc " << CheatHelper::privotProc << std::endl;
+	std::cout << "\t[.] namedPipeName " << CheatHelper::namedPipeName << std::endl;
+	std::cout << "\t[.] fileMapName " << CheatHelper::fileMapName << std::endl;
+	std::cout << "\t[.] driverName " << CheatHelper::driverName << std::endl;
 
 	return 0;
 }
