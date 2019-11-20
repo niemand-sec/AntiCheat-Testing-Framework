@@ -18,7 +18,10 @@ _fn_unmapPhysical DriverHelper::fn_unmapPhysical = 0;
 uintptr_t DriverHelper::DTBTargetProcess = 0;
 uintptr_t DriverHelper::virtualSizeTargetProcess = 0;
 uintptr_t DriverHelper::pBaseAddressTargetProcess = 0;
-
+uintptr_t DriverHelper::pVadRootTargetProcess = 0;
+uintptr_t DriverHelper::pPEBTargetProcess = 0;
+std::vector<EnumerateRemoteSectionData> DriverHelper::sections;
+std::vector<EnumerateRemoteModuleData> DriverHelper::modules;
 
 // Thanks to Jackson (http://jackson-t.ca/lg-driver-lpe.html)
 int DriverHelper::memmem(PBYTE haystack, DWORD haystack_size, PBYTE needle, DWORD needle_size)
@@ -609,7 +612,7 @@ uintptr_t DriverHelper::SearchKProcess(LPCVOID processName, uintptr_t &directory
 
 bool DriverHelper::ObtainKProcessInfo(uintptr_t &directoryTableBase, uintptr_t pKProcessAddress )
 {
-	std::cout << "\t[+] Grabing info from target process: " << std::endl;
+	std::cout << "\t[+] Grabing info from target process" << std::endl;
 	if (!DriverHelper::ReadVirtualMemory(directoryTableBase, pKProcessAddress + OFFSET_SECTIONBASEADDRESS,
 		&(DriverHelper::pBaseAddressTargetProcess), sizeof(uintptr_t), NULL))
 	{
@@ -619,7 +622,7 @@ bool DriverHelper::ObtainKProcessInfo(uintptr_t &directoryTableBase, uintptr_t p
 	std::cout << "\t[+] BaseAddress: 0x" << std::hex << DriverHelper::pBaseAddressTargetProcess << std::endl;
 
 
-	if (!DriverHelper::ReadVirtualMemory(directoryTableBase, pKProcessAddress + OFFSET_DIRECTORYTABLEBASE ,
+	if (!DriverHelper::ReadVirtualMemory(directoryTableBase, pKProcessAddress + OFFSET_DIRECTORYTABLEBASE,
 		&(DriverHelper::DTBTargetProcess), sizeof(uintptr_t), NULL))
 	{
 		std::cout << "[-] Failed trying to obtain the DirectoryTableBase." << std::endl;
@@ -634,6 +637,23 @@ bool DriverHelper::ObtainKProcessInfo(uintptr_t &directoryTableBase, uintptr_t p
 		return false;
 	}
 	std::cout << "\t[+] VirtualSize: 0x" << std::hex << DriverHelper::virtualSizeTargetProcess << std::endl;
+
+	if (!DriverHelper::ReadVirtualMemory(directoryTableBase, pKProcessAddress + OFFSET_VADROOT,
+		&(DriverHelper::pVadRootTargetProcess), sizeof(uintptr_t), NULL))
+	{
+		std::cout << "[-] Failed trying to obtain the VadRoot." << std::endl;
+		return false;
+	}
+	std::cout << "\t[+] VadRoot: 0x" << std::hex << DriverHelper::pVadRootTargetProcess << std::endl;
+
+
+	if (!DriverHelper::ReadVirtualMemory(directoryTableBase, pKProcessAddress + OFFSET_EPROCESS_PEB,
+		&(DriverHelper::pPEBTargetProcess), sizeof(uintptr_t), NULL))
+	{
+		std::cout << "[-] Failed trying to obtain the PEB." << std::endl;
+		return false;
+	}
+	std::cout << "\t[+] PEB: 0x" << std::hex << DriverHelper::pPEBTargetProcess << std::endl;
 
 	return true;
 }
@@ -663,3 +683,165 @@ bool DriverHelper::CheckProcessHeader( uintptr_t &directoryTableBase, uintptr_t 
 }
 
 
+// Functions that will help us to dump the VadRoot AVL Tree, which has all the memory information about a particular process.
+
+EnumerateRemoteSectionData GetVadNodeInfo(uintptr_t directoryTableBase, uintptr_t node)
+{
+	/*
+	#define OFFSET_STARTINGVPN 0x018
+	#define OFFSET_ENDINGVPN 0x01c
+	#define OFFSET_STARTINGVPNHIGH 0x020
+	#define OFFSET_ENDINGVPNHIGH 0x021
+	*/
+	uint64_t startingVPNLow = 0;
+	uint64_t endingVPNLow = 0;
+	uint64_t startingVPNHigh = 0;
+	uint64_t endingVPNHigh = 0;
+	unsigned long u = 0;
+
+	// Reading the starting and ending VPN.
+	DriverHelper::ReadVirtualMemory(directoryTableBase, node + OFFSET_STARTINGVPN, &startingVPNLow, sizeof(uint32_t), NULL);
+	DriverHelper::ReadVirtualMemory(directoryTableBase, node + OFFSET_ENDINGVPN, &endingVPNLow, sizeof(uint32_t), NULL);
+	DriverHelper::ReadVirtualMemory(directoryTableBase, node + OFFSET_STARTINGVPNHIGH, &startingVPNHigh, sizeof(uint8_t), NULL);
+	DriverHelper::ReadVirtualMemory(directoryTableBase, node + OFFSET_ENDINGVPNHIGH, &endingVPNHigh, sizeof(uint8_t), NULL);
+
+	// Reading the unsigned long u from MMVAD_SHORT
+	DriverHelper::ReadVirtualMemory(directoryTableBase, node + OFFSET_MMVAD_SHORT_U, &u, sizeof(unsigned long), NULL);
+
+	// We need to put together this two parts, some lshr will doo all the work.
+	uint64_t startingVPN = (startingVPNLow << 12) | (startingVPNHigh << 44);
+	uint64_t endingVPN = ((endingVPNLow + 1) << 12 | (endingVPNHigh << 44));
+
+	// Let's create the object for our section.
+	EnumerateRemoteSectionData section = {};
+	section.BaseAddress = (void *)startingVPN;
+	section.Size = endingVPN - startingVPN;
+
+	section.Protection = SectionProtection::NoAccess;
+	// To get the Protection Flag we need first to obtain the index of the protection from the _MMVAD_FLAGS->Protection
+	//		[+0x000 ( 2: 0)] VadType          : 0x2 [Type: unsigned long]
+	//		[+0x000 ( 7: 3)] Protection       : 0x7 [Type: unsigned long]
+	//		[+0x000 (13: 8)] PreferredNode    : 0x0 [Type: unsigned long]
+	//		[+0x000 (14:14)] NoChange         : 0x0 [Type: unsigned long]
+	//		[+0x000 (15:15)] PrivateMemory    : 0x0 [Type: unsigned long]
+	//    0xF8 == 11111000  <----- Mask to extract bits 7:3
+	DWORD protection = (u >> 3) & 0x1F;
+	protection = ProtectionFlags[protection];
+
+	if ((protection & PAGE_EXECUTE) == PAGE_EXECUTE) section.Protection |= SectionProtection::Execute;
+	if ((protection & PAGE_EXECUTE_READ) == PAGE_EXECUTE_READ) section.Protection |= SectionProtection::Execute | SectionProtection::Read;
+	if ((protection & PAGE_EXECUTE_READWRITE) == PAGE_EXECUTE_READWRITE) section.Protection |= SectionProtection::Execute | SectionProtection::Read | SectionProtection::Write;
+	if ((protection & PAGE_EXECUTE_WRITECOPY) == PAGE_EXECUTE_WRITECOPY) section.Protection |= SectionProtection::Execute | SectionProtection::Read | SectionProtection::CopyOnWrite;
+	if ((protection & PAGE_READONLY) == PAGE_READONLY) section.Protection |= SectionProtection::Read;
+	if ((protection & PAGE_READWRITE) == PAGE_READWRITE) section.Protection |= SectionProtection::Read | SectionProtection::Write;
+	if ((protection & PAGE_WRITECOPY) == PAGE_WRITECOPY) section.Protection |= SectionProtection::Read | SectionProtection::CopyOnWrite;
+	if ((protection & PAGE_GUARD) == PAGE_GUARD) section.Protection |= SectionProtection::Guard;
+
+	//  [+0x000 (15:15)] PrivateMemory    : 0x0 [Type: unsigned long]
+	//  [+0x000 (16:16)] PrivateFixup     : 0x0 [Type: unsigned long]
+	//  [+0x000 (17:17)] ManySubsections  : 0x0 [Type: unsigned long]
+	//  [+0x000 (18:18)] Enclave          : 0x0 [Type: unsigned long]
+	//  We need the memory type, we can check with the bit 15 if its private memory
+	//  TODO: not mandatory, this is why we see an unknown on the GUI when displaying all the sections.
+
+	return section;
+}
+
+
+// Since we can't open a handle to the process and call VirtualQueryEx
+void DriverHelper::WalkVadAVLTree(uintptr_t directoryTableBase, uintptr_t start)
+{
+
+	if (start == NULL)
+		return;
+
+	// Since we need to traverse a balanced tree, 
+	// we first read all the left branches and then we read the right one while we go up again.
+	uintptr_t left = 0;
+	DriverHelper::ReadVirtualMemory(directoryTableBase, start, &left, sizeof(uintptr_t), NULL);
+
+	// Yep, recursion ;)
+	WalkVadAVLTree(directoryTableBase, left);
+
+	// Now the right nodes.
+	uintptr_t right = 0;
+	DriverHelper::ReadVirtualMemory(directoryTableBase, start + sizeof(uintptr_t), &right, sizeof(uintptr_t), NULL);
+
+	// We need to obtain information from each node: starting and ending address, protection, etc.
+	EnumerateRemoteSectionData section = GetVadNodeInfo(directoryTableBase, start);
+
+	// We push that information so we can later notify ReClass.
+	DriverHelper::sections.push_back(section);
+
+	// And again recursion
+	WalkVadAVLTree(directoryTableBase, right);
+}
+
+
+
+
+void DriverHelper::EnumRing3ProcessModules(uintptr_t directoryTableBase)
+{
+
+	// Variables used to store lpr pointer and data.
+	PEB_LDR_DATA ldr;
+	uintptr_t pLDR = 0;
+
+	// We need to dereference the pointer and obtain retrieve the whole LDR structure.
+	DriverHelper::ReadVirtualMemory(DriverHelper::DTBTargetProcess, DriverHelper::pPEBTargetProcess + OFFSET_PEB_LDR, &pLDR, sizeof(uintptr_t), NULL);
+	DriverHelper::ReadVirtualMemory(DriverHelper::DTBTargetProcess, pLDR, &ldr, sizeof(PEB_LDR_DATA), NULL);
+
+	// InMemoryOrderModuleList will have the head of a linked list.
+	// We can traverse the whole list to obtain all the currently loaded modules.
+	LIST_ENTRY* head = ldr.InMemoryOrderModuleList.Flink;
+	LIST_ENTRY* next = head;
+
+	PLDR_MODULE pLdrModule = nullptr;
+	LDR_MODULE LdrModule;
+	do
+	{
+		LDR_DATA_TABLE_ENTRY LdrEntry;
+		LDR_DATA_TABLE_ENTRY* Base = CONTAINING_RECORD(head, LDR_DATA_TABLE_ENTRY, InMemoryOrderLinks);
+
+		if (DriverHelper::ReadVirtualMemory(DriverHelper::DTBTargetProcess, (uintptr_t)Base, &LdrEntry, sizeof(LdrEntry), NULL))
+		{
+			char* pLdrModuleOffset = reinterpret_cast<char*>(head) - sizeof(LIST_ENTRY);
+
+			// Obtaining module pointer
+			DriverHelper::ReadVirtualMemory(DriverHelper::DTBTargetProcess, (uintptr_t)pLdrModuleOffset, &pLdrModule, sizeof(pLdrModule), NULL);
+			// Retrieven module information
+			DriverHelper::ReadVirtualMemory(DriverHelper::DTBTargetProcess, (uintptr_t)pLdrModule, &LdrModule, sizeof(LdrModule), NULL);
+
+			if (LdrEntry.DllBase)
+			{
+				//std::wstring fullname = LdrModule.FullDllName;
+
+				// Retrieve the FullDllName
+				WCHAR strFullDllName[MAX_PATH] = { 0 };
+				if (DriverHelper::ReadVirtualMemory(DriverHelper::DTBTargetProcess,
+					reinterpret_cast<uintptr_t>(LdrModule.FullDllName.Buffer),
+					&strFullDllName,
+					LdrModule.FullDllName.Length, NULL))
+				{
+					// We create the EnumerateRemoteModuleData so we can return it to ReClass
+					EnumerateRemoteModuleData module = {};
+
+					// Debuging code :P
+					// wprintf(L"Full Dll Name: %s\n", strFullDllName);
+					// std::cout<< "BaseAddress:     " << LdrModule.BaseAddress<<std::endl;
+
+					module.BaseAddress = LdrModule.BaseAddress;
+					std::copy(strFullDllName, strFullDllName + MAX_PATH, module.Path);
+					module.Size = LdrModule.SizeOfImage;
+
+					// We push the current module into the vecto we later use to notify ReClass
+					DriverHelper::modules.push_back(module);
+				}
+			}
+
+			head = LdrEntry.InMemoryOrderLinks.Flink;
+		}
+	} while (head != next);
+
+	return;
+}
