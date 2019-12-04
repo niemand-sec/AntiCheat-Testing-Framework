@@ -34,5 +34,10 @@ Most of the settings can be done by using config.ini file, however, some modules
 All this code is a result of the Researching presented at Recon 2019 with the call "Unveiling the underground world of Anti-Cheats".
 
 Links: 
-- https://recon.cx/2019/montreal/
-- https://cfp.recon.cx/reconmtl2019/talk/MRJ3CN/
+- First Release Info:
+  - https://recon.cx/2019/montreal/
+  - https://cfp.recon.cx/reconmtl2019/talk/MRJ3CN/
+- Second Release:
+  - https://www.blackhat.com/eu-19/briefings/schedule/index.html#unveiling-the-underground-world-of-anti-cheats-17359
+  
+  
