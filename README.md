@@ -22,6 +22,7 @@ Most of the settings can be done by using config.ini file, however, some modules
 - CheatHelper
 - DriverDisabler
 - DriverHelper
+- ExternalCheatDriver
 - DriverTester
 - HandleElevationDriver
 - HandleHijackingDLL
