@@ -1,5 +1,5 @@
 # AntiCheat-Testing-Framework
-Framework to test any Anti-Cheat on the market. This can be used as Template or Code Base to test any Anti-Cheat and learn along the way. The entry level to reverse AntiCheats and Cheats is quite high, therefore, I'm realeasing all the code I developed during my research. The main idea is to help people and motive them to get into this topic which is really interesting and there is a lot to research about it.
+Framework to test any Anti-Cheat on the market. This can be used as Template or Code Base to test any Anti-Cheat and learn along the way. The entry level to reverse AntiCheats and Cheats is quite high, therefore, I'm realeasing all the code I developed during my research. The main idea is to help people and motivate them to get into this topic which is really interesting and there is a lot to research about it.
 
 All this code is the result of a research done for Recon2019 (Montreal) and BlackHat Europe 2019 (London). 
 
@@ -9,7 +9,7 @@ More info: [Personal Blog](https://niemand.com.ar/)
 
 - **Description for each module can be found on each folder**.
 - Modules can be used together or separated. 
-- Cuztomization should be simple due to the modularity of the code.
+- Customization should be simple due to the modularity of the code.
 
 # Usage
 
@@ -33,7 +33,7 @@ Most of the settings can be done by using config.ini file, however, some modules
 
 # About this Project
 
-All this code is a result of the Researching presented at Recon 2019 and BlackHat Europe 2019: "Unveiling the underground world of Anti-Cheats"
+All this code is a result of the research presented at Recon 2019 and BlackHat Europe 2019: "Unveiling the underground world of Anti-Cheats"
 
 Links: 
 - First Release Info:
